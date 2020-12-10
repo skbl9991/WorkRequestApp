@@ -14,12 +14,15 @@ namespace WorkRequestManagment.Models
         {
             if (context.Database.GetPendingMigrations().Count() == 0)
             {
-                if (context is EFWorkRequestContext requestContext) {
+                if (context is EFWorkRequestContext requestContext)
+                {
                     //add data To Database
-                    if (requestContext.WorkRequests.Count() == 0){
+                    if (requestContext.WorkRequests.Count() == 0)
+                    {
                         requestContext.WorkRequests.AddRange(Requests);
                     }
-                    if (requestContext.Users.Count() == 0)  {
+                    if (requestContext.Users.Count() == 0)
+                    {
                         requestContext.Users.AddRange(Users);
                     }
 
@@ -29,12 +32,16 @@ namespace WorkRequestManagment.Models
             }
         }
 
-        public static void ClearData(DbContext context){
-            if (context is EFWorkRequestContext requestContext){
-                if (requestContext.WorkRequests.Count() == 0){
+        public static void ClearData(DbContext context)
+        {
+            if (context is EFWorkRequestContext requestContext)
+            {
+                if (requestContext.WorkRequests.Count() == 0)
+                {
                     requestContext.WorkRequests.RemoveRange(requestContext.WorkRequests);
                 }
-                if (requestContext.Users.Count() == 0){
+                if (requestContext.Users.Count() == 0)
+                {
                     requestContext.Users.RemoveRange(requestContext.Users);
                 }
             }
@@ -62,6 +69,7 @@ namespace WorkRequestManagment.Models
                     new User { LogonName = "MINSK\\Arc_EX", Phone = "222-222", UserFIO = "Arc Executor", Role = Roles.Executor },
                     new User { LogonName = "MINSK\\Arc_IN", Phone = "313-123", UserFIO = "Arc Inspector", Role = Roles.Inspector },
                     new User { LogonName = "MINSK\\Arc_RA", Phone = "513-373", UserFIO = "Arc RoleAdmin", Role = Roles.RoleAdmin },
+                    new User { LogonName = "MINSK\\Arc_CL", Phone = "777-373", UserFIO = "Arc ClientRole", Role = Roles.Client },
                     }
                 );
 

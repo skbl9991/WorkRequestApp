@@ -9,10 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkRequestManagment.Infrastructure;
 using WorkRequestManagment.Models;
+using WorkRequestManagment.Models.CustomRespitories;
 using WorkRequestManagment.Models.EFContexts;
 
-namespace WorkRequest
+namespace WorkRequestManagment
 {
     public class Startup
     {
@@ -28,6 +30,7 @@ namespace WorkRequest
             services.AddControllersWithViews();
             services.AddDbContext<EFWorkRequestContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionsStrings:Default"]));
+            services.AddTransient<IUserDataRepository, UserDataRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +50,7 @@ namespace WorkRequest
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"
+                    pattern: "{controller=ClientRequests}/{action=List}/{id?}"
                 );
             });
         }

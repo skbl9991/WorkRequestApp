@@ -1,0 +1,76 @@
+﻿
+@model UserWorkRequestViewModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Клиентские Заявки";
+}
+
+<div class="m-1 p-2">
+    <div id="body-head" class="text-center">
+        <h4>Текущие Заявки</h4>
+    </div>
+    <main>
+        <div class="container">
+            @* Filter section *@
+            <div class="form-row">
+                <label>@Model.User.LogonName</label>
+            </div>
+            @* Filter section *@
+            <div class="card card-body">
+                <div class="form-row"> 
+                    <label class="col">Select Satus</label>
+                    <select class="col custom-select custom-select-sm"
+                            asp-items="@new SelectList(Enum.GetNames(typeof(Statuses)))">
+                        <option selected disabled>Select Any</option>
+                    </select>
+                    <button class="col btn btn-sm btn-primary">Accept</button>
+                </div>
+            </div>
+         
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="text-center">RequestMessage</th>
+                        <th>CurentStatus</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.WorkRequests.Count() > 0)
+                    {
+                        @foreach (WorkRequest wr in Model.WorkRequests)
+                        {
+                            <tr>
+                                <td>@wr.Id</td>
+                                <td class="col-6">@wr.RequestMessage</td>
+                                <td class="col">@((Statuses)wr.CurentStatus)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">
+                                <div class="text-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title">You don't have any Requests</h5>
+                                        <p class="card-text">Do you want to Create Some new Request ?</p>
+                                        <a asp-action="CreateWorkRequest" class="btn btn-sm btn-primary">Create New Request + </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            @* Page bar  *@
+            @if (Model.WorkRequests.Count() > 0){
+                <a asp-action="CreateWorkRequest" class="btn btn-sm btn-primary">Create New Request + </a>
+            }
+        </div>
+    </main>
+</div>
