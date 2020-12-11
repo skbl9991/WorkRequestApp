@@ -11,6 +11,14 @@ using WorkRequestManagment.Models.EFJunctions;
 
 namespace WorkRequestManagment.Controllers
 {
+
+    //Updates
+    //one view for create and update
+    //SOLID for acces to data
+    //more beutiful design for Views
+    //add validation for views
+    //add DTO for create and updates data
+    //add async 
     public class ClientRequestsController : Controller
     {
         private string testUserLogon  = "MINSK\\Arc_CL"; //, Role = Roles.Client
@@ -34,6 +42,7 @@ namespace WorkRequestManagment.Controllers
             return View(model);
         }
 
+
         public IActionResult CreateWorkRequest()
         {
             var wRequest = new WorkRequest
@@ -48,10 +57,8 @@ namespace WorkRequestManagment.Controllers
         [HttpPost]
         public IActionResult CreateWorkRequest(WorkRequest newWorkRequest)
         {
-            Console.WriteLine("\n \n CreateWorkRequest -------------------------------");
+            Console.WriteLine("\n \n CreateWorkRequest ------------------------------- \n");
             var user = context.Users
-                //.Include(u => u.WorkRequestUser)
-                //.ThenInclude(wr => wr.WorkRequest)
                 .FirstOrDefault(u => u.LogonName == testUserLogon)?.Id;
 
             context.Set<WorkRequestUserJunction>()
@@ -64,5 +71,55 @@ namespace WorkRequestManagment.Controllers
             return RedirectToAction(nameof(List));
         }
 
+        public IActionResult UpdateWorkRequest(int? editWorkRequestId)
+        {
+            Console.WriteLine("\n \n UpdateWorkRequest ------------------------------- \n");
+            //get WorkRequest 
+            if (editWorkRequestId == null)
+                return NotFound();
+
+            //нужны ли здесь Include запросы ?
+            var requestToEdit = context.WorkRequests
+                .Include(wr => wr.WorkRequestUser)
+                .ThenInclude(wru => wru.User).FirstOrDefault(wr => wr.Id == editWorkRequestId);
+
+            if (requestToEdit == null)
+                return NotFound();
+
+            return View(requestToEdit);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateWorkRequest(WorkRequest updateWorkRequest)
+        {
+            if (updateWorkRequest == null){
+                return NoContent();
+            }
+            context.WorkRequests.Update(updateWorkRequest);
+            context.SaveChanges();
+            return RedirectToAction(nameof(List));
+        }
+
+        [HttpPost]
+        public IActionResult DeleteWorkRequest(long? deletedWorkRequestId)
+        {
+            Console.WriteLine("\n \n ---------- Delete Method------- \n");
+
+            if (deletedWorkRequestId == null){
+                return NotFound();
+            }
+
+            var requestForDelete = context.WorkRequests
+                .Include(wr => wr.WorkRequestUser)
+                .FirstOrDefault(wr => wr.Id == deletedWorkRequestId);
+
+            if (requestForDelete == null)
+                return NotFound();
+
+            context.WorkRequests.Remove(requestForDelete);
+            context.SaveChanges();
+
+            return RedirectToAction(nameof(List));
+        }
     }
 }

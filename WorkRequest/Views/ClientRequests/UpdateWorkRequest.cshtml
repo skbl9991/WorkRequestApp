@@ -1,0 +1,25 @@
+﻿
+@model WorkRequest
+@{
+    ViewBag.Title = "Изменение Завки";
+}
+
+
+<div class="m-1 p-2">
+    <div class="container">
+        <h4 class="text-center">Update WorkRequest</h4>
+        <div class="card card-body">
+            <form asp-action="UpdateWorkRequest" method="post">
+                <input asp-for="@Model.Id" type="hidden" />
+                <div class="form-group">
+                    <label asp-for="@Model.RequestMessage">RequestMessage</label>
+                    <textarea asp-for="@Model.RequestMessage" class="form-control" placeholder="Enter Text Message"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a action="List" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

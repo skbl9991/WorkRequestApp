@@ -18,7 +18,7 @@
             </div>
             @* Filter section *@
             <div class="card card-body">
-                <div class="form-row"> 
+                <div class="form-row">
                     <label class="col">Select Satus</label>
                     <select class="col custom-select custom-select-sm"
                             asp-items="@new SelectList(Enum.GetNames(typeof(Statuses)))">
@@ -27,14 +27,14 @@
                     <button class="col btn btn-sm btn-primary">Accept</button>
                 </div>
             </div>
-         
+
             <table class="table table-sm table-bordered">
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th class="text-center">RequestMessage</th>
                         <th>CurentStatus</th>
-
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +46,20 @@
                                 <td>@wr.Id</td>
                                 <td class="col-6">@wr.RequestMessage</td>
                                 <td class="col">@((Statuses)wr.CurentStatus)</td>
+                                <td class="text-center">
+                                    <form asp-action="DeleteWorkRequest" method="post">
+
+                                        <input type="hidden" name="deletedWorkRequestId" value="@wr.Id" />
+
+                                        <a asp-action="UpdateWorkRequest" asp-route-editWorkRequestId="@wr.Id"
+                                           class="btn btn-sm btn-outline-warning
+                                            @(wr.CurentStatus != Statuses.Created ? "disabled" : "")">Edit</a>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                @(wr.CurentStatus != Statuses.Created ? "disabled" : "")>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         }
                     }
@@ -68,7 +82,8 @@
             </table>
 
             @* Page bar  *@
-            @if (Model.WorkRequests.Count() > 0){
+            @if (Model.WorkRequests.Count() > 0)
+            {
                 <a asp-action="CreateWorkRequest" class="btn btn-sm btn-primary">Create New Request + </a>
             }
         </div>
