@@ -12,19 +12,17 @@ namespace WorkRequestManagment.Controllers
 {
 
     //Updates
-    //one view for create and update
     //SOLID for acces to data
     //more beutiful design for Views
-    //add validation for views
     //add DTO for create and updates data
-    //add async 
+    //add async for work with context
     public class ClientRequestsController : Controller
     {
         private string testUserLogon = "MINSK\\Arc_CL"; //, Role = Roles.Client
         private EFWorkRequestContext context;
 
         public ClientRequestsController(EFWorkRequestContext ctx) => context = ctx;
-        
+
         public IActionResult List()
         {
             var user = context.Users.Where(u => u.LogonName == testUserLogon)
@@ -51,9 +49,9 @@ namespace WorkRequestManagment.Controllers
 
         public IActionResult AddOrUpdate(int? editWorkRequestId)
         {
-            if (editWorkRequestId == null) {
+            if (editWorkRequestId == null){
                 return View(new WorkRequest { Id = 0, CurentStatus = Statuses.Created, RequestMessage = null });
-            } 
+            }
 
             var requestToEdit = context.WorkRequests
                 .Include(wr => wr.WorkRequestUser)
@@ -66,35 +64,40 @@ namespace WorkRequestManagment.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult AddOrUpdate(WorkRequest updateWorkRequest)
         {
-            if (updateWorkRequest == null) 
-                return NoContent();
+            if (updateWorkRequest == null) return NoContent();
 
-            if (updateWorkRequest.Id == 0) {
-                //create Workrequest
-                var user = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
+            if (ModelState.IsValid)
+            {
+                if (updateWorkRequest.Id == 0){
+                    //create Workrequest
+                    var user = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
 
-                context.WorkRequestUserJunctions.Add(new WorkRequestUserJunction
-                {
-                    UserId = user.Id,
-                    WorkRequest = updateWorkRequest
-                });
+                    context.WorkRequestUserJunctions.Add(new WorkRequestUserJunction  {
+                        UserId = user.Id,
+                        WorkRequest = updateWorkRequest
+                    });
+                }
+                else { 
+                    //Update
+                    context.WorkRequests.Update(updateWorkRequest);
+                }
+
                 context.SaveChanges();
                 return RedirectToAction(nameof(List));
             }
 
-            context.WorkRequests.Update(updateWorkRequest);
-            context.SaveChanges();
-            return RedirectToAction(nameof(List));
+            return View(updateWorkRequest);
         }
 
         [HttpPost]
         public IActionResult DeleteWorkRequest(long? deletedWorkRequestId)
         {
-         
+
             if (deletedWorkRequestId == null) return NotFound();
-            
+
             var requestForDelete = context.WorkRequests
                 .Include(wr => wr.WorkRequestUser)
                 .FirstOrDefault(wr => wr.Id == deletedWorkRequestId);

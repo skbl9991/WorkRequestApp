@@ -7,84 +7,44 @@
 }
 
 <div class="m-1 p-2">
-    <div id="body-head" class="text-center">
-        <h4>Текущие Заявки</h4>
-    </div>
-    <main>
-        <div class="container">
-            @* Filter section *@
-            <div class="form-row">
-                <label>@Model.User.LogonName</label>
-            </div>
-            @* Filter section *@
-            <div class="card card-body">
-                <div class="form-row">
-                    <label class="col">Select Satus</label>
-                    <select class="col custom-select custom-select-sm"
-                            asp-items="@new SelectList(Enum.GetNames(typeof(Statuses)))">
-                        <option selected disabled>Select Any</option>
-                    </select>
-                    <button class="col btn btn-sm btn-primary">Accept</button>
-                </div>
-            </div>
 
-            <table class="table table-sm table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th class="text-center">RequestMessage</th>
-                        <th>CurentStatus</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.WorkRequests.Count() > 0)
-                    {
-                        @foreach (WorkRequest wr in Model.WorkRequests)
-                        {
-                            <tr>
-                                <td>@wr.Id</td>
-                                <td class="col-6">@wr.RequestMessage</td>
-                                <td class="col">@((Statuses)wr.CurentStatus)</td>
-                                <td class="text-center">
-                                    <form asp-action="DeleteWorkRequest" method="post">
-
-                                        <input type="hidden" name="deletedWorkRequestId" value="@wr.Id" />
-                                        <a asp-action="AddOrUpdate" asp-route-editWorkRequestId="@wr.Id"
-                                           class="btn btn-sm btn-outline-warning
-                                            @(wr.CurentStatus != Statuses.Created ? "disabled" : "")">Edit</a>
-                                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                                @(wr.CurentStatus != Statuses.Created ? "disabled" : "")>
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="3">
-                                <div class="text-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title">You don't have any Requests</h5>
-                                        <p class="card-text">Do you want to Create Some new Request ?</p>
-                                        <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Create New Request + </a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-
-            @* Page bar  *@
-            @if (Model.WorkRequests.Count() > 0)
-            {
-                <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Create New Request + </a>
-            }
+    <div class="container">
+        @* Filter section *@
+        <div class="form-row">
+            <label>@Model.User.LogonName</label>
         </div>
-    </main>
+        @* Filter section *@
+        <div class="card card-body">
+            <div class="form-row">
+                <label class="col">Select Satus</label>
+                <select class="col custom-select custom-select-sm"
+                        asp-items="@new SelectList(Enum.GetNames(typeof(Statuses)))">
+                    <option selected disabled>Select Any</option>
+                </select>
+                <button class="col btn btn-sm btn-primary">Accept</button>
+            </div>
+        </div>
+
+        <div class="m-3 p-3 bg-white rounded shadow-sm">
+            <h6 class="border-bottom border-gray pb-2 mb-0">Текущие Заявки</h6>
+            @if (Model.WorkRequests.Count() == 0)
+            {
+                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <div class=" text-center mt-3 p-3">
+                        <h6 > Сейчас у вас нет заявок</h6>
+                        <span> Для создания новой заявки нажмите  <strong>Cоздать</strong> </span>
+                    </div>
+                </div>
+            }
+
+            @foreach (WorkRequest wr in Model.WorkRequests)
+            {
+                <partial name="_WorkRequestItem" model="wr" />
+            }
+            <small class="d-block text-right mt-3">
+                <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Create New Request </a>
+            </small>
+        </div>
+
+    </div>
 </div>

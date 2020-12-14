@@ -19,14 +19,14 @@ namespace WorkRequestManagment.Models
         public long Id { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно к заполнению")]
-        [MaxLength(30, ErrorMessage = "Описание проблемы должно содержать не более 30 символов")]
+        [StringLength(30, ErrorMessage = "Описание проблемы должно содержать не более 30 символов")]
         public string LogonName { get; set; } //Ad logon
 
-        [MaxLength(50, ErrorMessage = "Описание проблемы должно содержать не более 50 символов")]
+        [StringLength(50, ErrorMessage = "Описание проблемы должно содержать не более 50 символов")]
         public string UserFIO { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно к заполнению")]
-        [MaxLength(30, ErrorMessage = "Описание проблемы должно содержать не более 30 символов")]
+        [StringLength(30, ErrorMessage = "Описание проблемы должно содержать не более 30 символов")]
         public string Phone { get; set; }
 
         [Column(TypeName = "tinyint")]
