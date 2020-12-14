@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkRequestManagment.Models.EFJunctions;
 
 namespace WorkRequestManagment.Models.EFContexts
 {
@@ -12,5 +13,6 @@ namespace WorkRequestManagment.Models.EFContexts
 
         public DbSet<User> Users { get; set; }
         public DbSet<WorkRequest> WorkRequests { get; set; }
+        public DbSet<WorkRequestUserJunction> WorkRequestUserJunctions { get; set; }
     }
 }

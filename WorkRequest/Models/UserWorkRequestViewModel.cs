@@ -11,6 +11,5 @@ namespace WorkRequestManagment.Models
         public User User { get; set; }
         public IEnumerable<WorkRequest> WorkRequests { get; set; }
 
-
     }
 }

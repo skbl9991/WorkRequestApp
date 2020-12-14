@@ -9,9 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WorkRequestManagment.Infrastructure;
 using WorkRequestManagment.Models;
-using WorkRequestManagment.Models.CustomRespitories;
 using WorkRequestManagment.Models.EFContexts;
 
 namespace WorkRequestManagment
@@ -30,13 +28,16 @@ namespace WorkRequestManagment
             services.AddControllersWithViews();
             services.AddDbContext<EFWorkRequestContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionsStrings:Default"]));
-            services.AddTransient<IUserDataRepository, UserDataRepository>();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
             EFWorkRequestContext requestContext)
         {
+            app.UseRequestLocalization();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

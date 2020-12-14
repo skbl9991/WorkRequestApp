@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WorkRequestManagment.Infrastructure;
 using WorkRequestManagment.Models;
 using WorkRequestManagment.Models.EFContexts;
 using WorkRequestManagment.Models.EFJunctions;
@@ -21,67 +20,44 @@ namespace WorkRequestManagment.Controllers
     //add async 
     public class ClientRequestsController : Controller
     {
-        private string testUserLogon  = "MINSK\\Arc_CL"; //, Role = Roles.Client
+        private string testUserLogon = "MINSK\\Arc_CL"; //, Role = Roles.Client
         private EFWorkRequestContext context;
 
         public ClientRequestsController(EFWorkRequestContext ctx) => context = ctx;
+        
+        public IActionResult List()
+        {
+            var user = context.Users.Where(u => u.LogonName == testUserLogon)
+                .FirstOrDefault();
 
-        public IActionResult List(){
+            if (user == null)
+                return NotFound("User not found"); //redirect to CreateUser or Error Page
 
-            Console.WriteLine("\n \n List -------------------------------");
-            var workRequests = context.Set<WorkRequestUserJunction>()
-                .Include(wr => wr.User)
-                .Include(wr => wr.WorkRequest)
-                .Where(wr => wr.User.LogonName == testUserLogon).AsNoTracking().ToArray();
+            var workRequests = context.WorkRequestUserJunctions
+                    .Include(wru => wru.User)
+                    .Include(wru => wru.WorkRequest)
+                    .Where(wrj => wrj.UserId == user.Id)
+                    .Where(wr => wr.WorkRequest.CurentStatus == Statuses.Created
+                                                        || wr.WorkRequest.CurentStatus == Statuses.InProgress);
 
             var model = new UserWorkRequestViewModel
             {
-                User = workRequests.Select(wr => wr.User).First(),
-                WorkRequests = workRequests.Select(wr => wr.WorkRequest).ToArray()
+                User = user,
+                WorkRequests = workRequests.Select(wrj => wrj.WorkRequest).ToList()
             };
             return View(model);
         }
 
 
-        public IActionResult CreateWorkRequest()
+        public IActionResult AddOrUpdate(int? editWorkRequestId)
         {
-            var wRequest = new WorkRequest
-            {
-                Id = 0,
-                CurentStatus = Statuses.Created,
-                RequestMessage = ""
-            };
-            return View(wRequest);
-        }
+            if (editWorkRequestId == null) {
+                return View(new WorkRequest { Id = 0, CurentStatus = Statuses.Created, RequestMessage = null });
+            } 
 
-        [HttpPost]
-        public IActionResult CreateWorkRequest(WorkRequest newWorkRequest)
-        {
-            Console.WriteLine("\n \n CreateWorkRequest ------------------------------- \n");
-            var user = context.Users
-                .FirstOrDefault(u => u.LogonName == testUserLogon)?.Id;
-
-            context.Set<WorkRequestUserJunction>()
-                .Add(new WorkRequestUserJunction
-                {
-                    UserId = user.Value,
-                    WorkRequest = newWorkRequest
-                });
-            context.SaveChanges();
-            return RedirectToAction(nameof(List));
-        }
-
-        public IActionResult UpdateWorkRequest(int? editWorkRequestId)
-        {
-            Console.WriteLine("\n \n UpdateWorkRequest ------------------------------- \n");
-            //get WorkRequest 
-            if (editWorkRequestId == null)
-                return NotFound();
-
-            //нужны ли здесь Include запросы ?
             var requestToEdit = context.WorkRequests
                 .Include(wr => wr.WorkRequestUser)
-                .ThenInclude(wru => wru.User).FirstOrDefault(wr => wr.Id == editWorkRequestId);
+                .FirstOrDefault(wr => wr.Id == editWorkRequestId);
 
             if (requestToEdit == null)
                 return NotFound();
@@ -90,11 +66,24 @@ namespace WorkRequestManagment.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateWorkRequest(WorkRequest updateWorkRequest)
+        public IActionResult AddOrUpdate(WorkRequest updateWorkRequest)
         {
-            if (updateWorkRequest == null){
+            if (updateWorkRequest == null) 
                 return NoContent();
+
+            if (updateWorkRequest.Id == 0) {
+                //create Workrequest
+                var user = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
+
+                context.WorkRequestUserJunctions.Add(new WorkRequestUserJunction
+                {
+                    UserId = user.Id,
+                    WorkRequest = updateWorkRequest
+                });
+                context.SaveChanges();
+                return RedirectToAction(nameof(List));
             }
+
             context.WorkRequests.Update(updateWorkRequest);
             context.SaveChanges();
             return RedirectToAction(nameof(List));
@@ -103,12 +92,9 @@ namespace WorkRequestManagment.Controllers
         [HttpPost]
         public IActionResult DeleteWorkRequest(long? deletedWorkRequestId)
         {
-            Console.WriteLine("\n \n ---------- Delete Method------- \n");
-
-            if (deletedWorkRequestId == null){
-                return NotFound();
-            }
-
+         
+            if (deletedWorkRequestId == null) return NotFound();
+            
             var requestForDelete = context.WorkRequests
                 .Include(wr => wr.WorkRequestUser)
                 .FirstOrDefault(wr => wr.Id == deletedWorkRequestId);

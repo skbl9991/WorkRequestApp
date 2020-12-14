@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using WorkRequestManagment.Models.EFContexts;
+using WorkRequestManagment.Models.EFJunctions;
 
 namespace WorkRequestManagment.Models
 {
@@ -18,17 +19,16 @@ namespace WorkRequestManagment.Models
                 {
                     //add data To Database
                     if (requestContext.WorkRequests.Count() == 0)
-                    {
                         requestContext.WorkRequests.AddRange(Requests);
-                    }
+
                     if (requestContext.Users.Count() == 0)
-                    {
                         requestContext.Users.AddRange(Users);
-                    }
 
+                    if (requestContext.WorkRequestUserJunctions.Count() == 0)
+                        requestContext.WorkRequestUserJunctions.AddRange(WorkRequestUserJunctions);
+
+                    context.SaveChanges();
                 }
-
-                context.SaveChanges();
             }
         }
 
@@ -36,14 +36,35 @@ namespace WorkRequestManagment.Models
         {
             if (context is EFWorkRequestContext requestContext)
             {
-                if (requestContext.WorkRequests.Count() == 0)
-                {
+                if (requestContext.WorkRequestUserJunctions.Count() != 0) 
+                    requestContext.WorkRequestUserJunctions
+                        .RemoveRange(requestContext.WorkRequestUserJunctions);
+                
+
+                if (requestContext.WorkRequests.Count() != 0) 
                     requestContext.WorkRequests.RemoveRange(requestContext.WorkRequests);
-                }
-                if (requestContext.Users.Count() == 0)
-                {
+                
+                if (requestContext.Users.Count() != 0) 
                     requestContext.Users.RemoveRange(requestContext.Users);
-                }
+
+                context.SaveChanges();
+            }
+  
+        }
+
+        //Add to user client Workrequests with status = created
+        public static WorkRequestUserJunction[] WorkRequestUserJunctions {
+            get {
+                WorkRequestUserJunction[] junctons = 
+                {
+                    new WorkRequestUserJunction { UserId = 1, WorkRequestId = 1 },
+                     new WorkRequestUserJunction { UserId = 1, WorkRequestId = 9 },
+                      new WorkRequestUserJunction { UserId = 1, WorkRequestId = 10 },
+                       new WorkRequestUserJunction { UserId = 1, WorkRequestId = 12 },
+                        new WorkRequestUserJunction { UserId = 1, WorkRequestId = 13 },
+                         new WorkRequestUserJunction { UserId = 1, WorkRequestId = 15 },
+                };
+                return junctons;
             }
         }
 

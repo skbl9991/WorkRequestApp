@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkRequestManagment.Models.EFContexts;
 
 namespace WorkRequestManagment.Migrations
 {
     [DbContext(typeof(EFWorkRequestContext))]
-    partial class EFWorkRequestContextModelSnapshot : ModelSnapshot
+    [Migration("20201212101616_AddAttributesToModel")]
+    partial class AddAttributesToModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace WorkRequestManagment.Migrations
 
                     b.HasIndex("WorkRequestId");
 
-                    b.ToTable("WorkRequestUserJunctions");
+                    b.ToTable("WorkRequestUserJunction");
                 });
 
             modelBuilder.Entity("WorkRequestManagment.Models.User", b =>
@@ -57,8 +59,8 @@ namespace WorkRequestManagment.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
 
-                    b.Property<byte>("Role")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserFIO")
                         .HasColumnType("nvarchar(50)")
@@ -76,8 +78,8 @@ namespace WorkRequestManagment.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<byte>("CurentStatus")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("CurentStatus")
+                        .HasColumnType("int");
 
                     b.Property<string>("RequestMessage")
                         .IsRequired()
