@@ -1,0 +1,23 @@
+﻿
+/*Classess for WorkRequest Svg tag*/
+
+.fill-danger {
+    fill: #dc3545 !important;
+}
+
+.fill-warning {
+    fill: #ffc107 !important;
+}
+
+.fill-info {
+    fill: #17a2b8 !important;
+}
+
+.fill-success {
+    fill: #28a745 !important;
+}
+
+.fill-secondary {
+    fill: #6c757d !important;
+}
+

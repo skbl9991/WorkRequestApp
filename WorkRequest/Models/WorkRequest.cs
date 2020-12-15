@@ -8,16 +8,6 @@ using WorkRequestManagment.Models.EFJunctions;
 
 namespace WorkRequestManagment.Models
 {
-    #region ColorsFor Statuses
-    //Created: text-info #17a2b8
-    //InProgress: text-primary #007bff
-    //Done: text-success #28a745
-    //Canceled: text-secondary #6c757d
-    //Deleted/Removed: text-danger #dc3545
-    #endregion
-    public enum Statuses{
-        Created, InProgress, Done, Canceled, All
-    }
 
     public class WorkRequest
     {
