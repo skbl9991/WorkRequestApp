@@ -9,21 +9,19 @@
 <div class="m-1 p-2">
 
     <div class="container">
-        @* Filter section *@
+
         <div class="form-row">
             <label>@Model.User.LogonName</label>
         </div>
-        @* Filter section *@
-        <div class="card card-body">
-            <div class="form-row">
-                <label class="col">Select Satus</label>
-                <select class="col custom-select custom-select-sm"
-                        asp-items="@new SelectList(Enum.GetNames(typeof(Statuses)))">
-                    <option selected disabled>Select Any</option>
-                </select>
-                <button class="col btn btn-sm btn-primary">Accept</button>
+
+        @* Pages Section *@
+        @if (Model.WorkRequests.TotalPages > 0)
+        {
+            <div class="text-center">
+                <partial name="_Pages" model="Model.WorkRequests" />
             </div>
-        </div>
+        }
+
         @* WorkRequest Section *@
         <div class="m-3 p-3 bg-white rounded shadow-sm">
             <h6 class="border-bottom border-gray pb-2 mb-0">Текущие Заявки</h6>
@@ -31,19 +29,22 @@
             {
                 <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                     <div class=" text-center mt-3 p-3">
-                        <h6 > Сейчас у вас нет заявок</h6>
-                        <span> Для создания новой заявки нажмите  <strong>Cоздать</strong> </span>
+                        <h6> Сейчас у вас нет заявок</h6>
+                        <span> Для создания новой заявки нажмите  <strong> Создать </strong> </span>
                     </div>
                 </div>
             }
-
-            @foreach (WorkRequest wr in Model.WorkRequests)
+            else
             {
-                <partial name="_WorkRequestItem" model="wr" />
+                @foreach (WorkRequest wrItem in Model.WorkRequests)
+                {
+                    <partial name="_WorkRequestClient" model="wrItem" />
+                }
+
+                <small class="d-block text-right mt-3">
+                    <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Создать </a>
+                </small>
             }
-            <small class="d-block text-right mt-3">
-                <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Create New Request </a>
-            </small>
         </div>
 
     </div>

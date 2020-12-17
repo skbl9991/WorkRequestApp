@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using WorkRequestManagment.Models;
 using WorkRequestManagment.Models.EFContexts;
 using WorkRequestManagment.Models.EFJunctions;
+using WorkRequestManagment.Models.Pages;
+using WorkRequestManagment.Models.ViewModels;
 
 namespace WorkRequestManagment.Controllers
 {
@@ -23,11 +25,11 @@ namespace WorkRequestManagment.Controllers
 
         public ClientRequestsController(EFWorkRequestContext ctx) => context = ctx;
 
-        public IActionResult List()
+        public IActionResult List(QueryOptions options)
         {
             var user = context.Users.Where(u => u.LogonName == testUserLogon)
-                .FirstOrDefault();
-
+                .FirstOrDefault(); //1 запрос для всего контроллера
+            
             if (user == null)
                 return NotFound("User not found"); //redirect to CreateUser or Error Page
 
@@ -41,7 +43,7 @@ namespace WorkRequestManagment.Controllers
             var model = new UserWorkRequestViewModel
             {
                 User = user,
-                WorkRequests = workRequests.Select(wrj => wrj.WorkRequest).ToList()
+                WorkRequests = new PagedList<WorkRequest>(workRequests.Select(wrj => wrj.WorkRequest), options)
             };
             return View(model);
         }
@@ -67,14 +69,14 @@ namespace WorkRequestManagment.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult AddOrUpdate(WorkRequest updateWorkRequest)
         {
-            if (updateWorkRequest == null) return NoContent();
+            if (updateWorkRequest == null) 
+                return NotFound();
 
             if (ModelState.IsValid)
             {
                 if (updateWorkRequest.Id == 0){
-                    //create Workrequest
+                    //add New Workrequest
                     var user = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
-
                     context.WorkRequestUserJunctions.Add(new WorkRequestUserJunction  {
                         UserId = user.Id,
                         WorkRequest = updateWorkRequest
@@ -110,5 +112,7 @@ namespace WorkRequestManagment.Controllers
 
             return RedirectToAction(nameof(List));
         }
+
+   
     }
 }

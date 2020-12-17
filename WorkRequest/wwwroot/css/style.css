@@ -21,3 +21,9 @@
     fill: #6c757d !important;
 }
 
+.bg-linear-blue {
+    background-color: #809cec;
+    background-image: linear-gradient(135deg, #809cec 0%, #242b83 100%);
+}
+
+

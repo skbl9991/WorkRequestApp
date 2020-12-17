@@ -53,6 +53,7 @@ namespace WorkRequestManagment
                     name: "default",
                     pattern: "{controller=ClientRequests}/{action=List}/{id?}"
                 );
+                endpoints.MapDefaultControllerRoute();
             });
         }
     }
