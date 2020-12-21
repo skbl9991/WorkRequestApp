@@ -22,8 +22,10 @@ namespace WorkRequestManagment.Controllers
             context = ctx;
         }
 
-        public IActionResult Index(QueryOptions options, int status = (int)Statuses.InProgress)
+        public IActionResult Index(QueryOptions options, Statuses? status = null)
         {
+            ViewBag.SelectedStatus = status; //save selected status
+
             var userExec = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
 
             if (userExec == null)
@@ -31,17 +33,17 @@ namespace WorkRequestManagment.Controllers
 
             IQueryable<WorkRequest> data = context.WorkRequests.Include(wr => wr.WorkRequestUser);
 
-            if (status == (int)Statuses.Created) // Not Accepted WorkRequests
+            if (status == Statuses.Created) // Not Accepted WorkRequests
             {
-                data = data.Where(wr => wr.CurentStatus == (Statuses)status);
+                data = data.Where(wr => wr.CurentStatus == status);
             }
-            else if (status != (int)Statuses.All)
+            else if (status != Statuses.All)
             {
                 data = context.WorkRequestUserJunctions
                      .Include(wrj => wrj.User)
                      .Include(wrj => wrj.WorkRequest)
                      .Where(wrj => wrj.UserId == userExec.Id)
-                     .Where(wrj => wrj.WorkRequest.CurentStatus == (Statuses)status)
+                     .Where(wrj => wrj.WorkRequest.CurentStatus == status)
                      .Select(wrj => wrj.WorkRequest);
             }
 

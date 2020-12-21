@@ -1,0 +1,37 @@
+﻿
+@model ExecutorCardViewModel
+
+<div class="media text-white m-3 p-3  bg-linear-blue rounded shadow-sm">
+    <svg height="100" width="100" preserveAspectRatio="xMidYMid slice"
+         focusable="false" role="img">
+        <title>User Icon</title>
+        <circle cx="50" cy="50" r="30" fill="white" />
+    </svg>
+    <div class=" p-2 mr-5 mb-0 small lh-125 ">
+        <h5 class="d-block pt-2 ">FIO: @Model.User.UserFIO</h5>
+        <strong class="d-block ">Role: @Model.User.Role.ToString()</strong>
+        <strong class="d-block ">Phone: @Model.User.Phone</strong>
+    </div>
+
+    <div class="col h-100 pt-3 border-left border-white">
+        @*<h5 class="text-center">Список Заявок</h5>*@
+        <h5 class="text-center">WorkRequest Lists</h5>
+        <div class="row pt-3 ">
+            <div class="col text-center">
+                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.All">
+                    <h6 class="btn btn-outline-light mr-2 "> All </h6>
+                </a>
+
+                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.Created">
+                    <h6 class="btn btn-outline-light mr-2 ">Created <span class="badge badge-light">@Model.CreatedRequestCount</span> </h6>
+                </a>
+                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.InProgress">
+                    <h6 class="btn btn-outline-light mr-2 ">In Progress <span class="badge badge-light">@Model.InProgressRequesCount</span> </h6>
+                </a>
+                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.Done">
+                    <h6 class="btn btn-outline-light mr-2 "> Done </h6>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

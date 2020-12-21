@@ -17,16 +17,16 @@
                     <input type="hidden" name="acceptedRequestId" value="@Model.Id" />
                     @*<a asp-action="AddOrUpdate" asp-route-editWorkRequestId="@Model.Id"
             class="btn btn-sm btn-outline-warning @(Model.CurentStatus != Statuses.Created ? "disabled" : "")"> Edit </a>*@
-                    <button type="submit" class="btn btn-sm btn-outline-primary"
-                            @(Model.CurentStatus == Statuses.Created ? "" : "invisible")>
+                    <button type="submit" class="btn btn-sm btn-outline-primary
+                            @(Model.CurentStatus == Statuses.Created ? "" : "d-none") ">
                         Accept
                     </button>
                 </form>
 
                 <form id="done-form"  asp-action="DoneWorkRequest" method="post">
                     <input type="hidden" name="doneWorkRequestId" value="@Model.Id" />
-                    <button type="submit" class="btn btn-sm btn-outline-success"
-                            @(Model.CurentStatus == Statuses.InProgress ? "" : "invisible")>
+                    <button type="submit" class="btn btn-sm btn-outline-success
+                            @(Model.CurentStatus == Statuses.InProgress ? "" : "d-none") ">
                         Done
                     </button>
                 </form>

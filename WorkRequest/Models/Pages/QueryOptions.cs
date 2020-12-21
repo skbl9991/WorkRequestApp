@@ -9,7 +9,6 @@ namespace WorkRequestManagment.Models.Pages
     {
         public int CurrentPage { get; set; } = 1;
         public int PageSize { get; set; } = 5;
-
         //public string OrderPropertyName { get; set; }
         //public bool DescendingOrder { get; set; }
 

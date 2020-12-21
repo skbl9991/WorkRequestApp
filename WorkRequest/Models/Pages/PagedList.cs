@@ -13,7 +13,7 @@ namespace WorkRequestManagment.Models.Pages
             PageSize = options.PageSize;
             Options = options;
 
-            TotalPages = query.Count() / PageSize;
+            TotalPages = (int)Math.Ceiling((double)query.Count() / PageSize);
             AddRange(query.Skip((CurrentPage - 1) * PageSize).Take(PageSize));
         }
 
