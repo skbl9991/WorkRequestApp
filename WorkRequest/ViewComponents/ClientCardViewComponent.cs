@@ -10,18 +10,17 @@ using WorkRequestManagment.Models.ViewModels;
 
 namespace WorkRequestManagment.ViewComponents
 {
-    //ExecutorCardViewComponent
-    public class ExecutorCardViewComponent : ViewComponent
+    public class ClientCardViewComponent : ViewComponent
     {
         private EFWorkRequestContext wrContext;
+        public ClientCardViewComponent(EFWorkRequestContext ctx) => wrContext = ctx;
 
-        public ExecutorCardViewComponent(EFWorkRequestContext ctx) => wrContext = ctx;
         public async Task<IViewComponentResult> InvokeAsync(User userModel)
         {
             if (userModel == null)
                 return Content($"User modal was empty !");
 
-           var viewModel = new ExecutorCardViewModel
+           var viewModel = new ClientCardViewModel
             {
                 User = userModel,
                 CreatedRequestCount = await wrContext.WorkRequests

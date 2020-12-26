@@ -25,6 +25,7 @@ namespace WorkRequestManagment.Controllers
         public IActionResult Index(QueryOptions options, Statuses? status = null)
         {
             ViewBag.SelectedStatus = status; //save selected status
+            ViewBag.ReturnUrl = HttpContext.Request.Path + HttpContext.Request.QueryString; // Request.Headers["Referer"].ToString();
 
             var userExec = context.Users.FirstOrDefault(u => u.LogonName == testUserLogon);
 
@@ -35,9 +36,9 @@ namespace WorkRequestManagment.Controllers
 
             if (status == Statuses.Created) // Not Accepted WorkRequests
             {
-                data = data.Where(wr => wr.CurentStatus == status);
+                data = data.Where(wr => wr.CurentStatus == status); //Executor must see all Created Requests
             }
-            else if (status != Statuses.All)
+            else if (status != null)
             {
                 data = context.WorkRequestUserJunctions
                      .Include(wrj => wrj.User)
@@ -57,8 +58,10 @@ namespace WorkRequestManagment.Controllers
 
 
         [HttpPost]
-        public IActionResult AcceptRequest(long? acceptedRequestId)
+        [ValidateAntiForgeryToken]
+        public IActionResult AcceptRequest(long? acceptedRequestId, string returnUrl)
         {
+
             if (acceptedRequestId == null) 
                 return NotFound();
 
@@ -79,11 +82,13 @@ namespace WorkRequestManagment.Controllers
             });
 
             context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+
+            return Redirect(returnUrl);
         }
 
         [HttpPost] //Rework This method
-        public IActionResult DoneWorkRequest(long? doneWorkRequestId)
+        [ValidateAntiForgeryToken]
+        public IActionResult DoneWorkRequest(long? doneWorkRequestId, string returnUrl)
         {
 
             if (doneWorkRequestId == null) return NotFound();
@@ -98,11 +103,12 @@ namespace WorkRequestManagment.Controllers
             requestForUpdate.CurentStatus = Statuses.Done;
             context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return Redirect(returnUrl);
         }
 
         [HttpPost]
-        public IActionResult DeleteWorkRequest(long? deletedWorkRequestId)
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteWorkRequest(long? deletedWorkRequestId, string returnUrl)
         {
             if (deletedWorkRequestId == null) return NotFound();
 
@@ -116,7 +122,7 @@ namespace WorkRequestManagment.Controllers
             context.WorkRequests.Remove(requestForDelete);
             context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return Redirect(returnUrl);
         }
 
     }

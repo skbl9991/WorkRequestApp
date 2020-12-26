@@ -51,7 +51,7 @@ namespace WorkRequestManagment
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=ClientRequests}/{action=List}/{id?}"
+                    pattern: "{controller=ClientRequests}/{action=Index}/{id?}"
                 );
                 endpoints.MapDefaultControllerRoute();
             });

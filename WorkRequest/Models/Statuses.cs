@@ -14,7 +14,7 @@ namespace WorkRequestManagment.Models
     #endregion
     public enum Statuses
     {
-        Created, InProgress, Done, Canceled, All
+        Created, InProgress, Done, Canceled
     }
 
     public static class StatusHelper

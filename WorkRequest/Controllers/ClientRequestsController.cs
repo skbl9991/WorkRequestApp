@@ -25,7 +25,8 @@ namespace WorkRequestManagment.Controllers
 
         public ClientRequestsController(EFWorkRequestContext ctx) => context = ctx;
 
-        public IActionResult List(QueryOptions options)
+        //status == nul equal to Statuses.All
+        public IActionResult Index(QueryOptions options, Statuses? status = null)
         {
             var user = context.Users.Where(u => u.LogonName == testUserLogon)
                 .FirstOrDefault(); //1 запрос для всего контроллера
@@ -33,17 +34,20 @@ namespace WorkRequestManagment.Controllers
             if (user == null)
                 return NotFound("User not found"); //redirect to CreateUser or Error Page
 
-            var workRequests = context.WorkRequestUserJunctions
-                    .Include(wru => wru.User)
-                    .Include(wru => wru.WorkRequest)
-                    .Where(wrj => wrj.UserId == user.Id)
-                    .Where(wr => wr.WorkRequest.CurentStatus == Statuses.Created
-                                                        || wr.WorkRequest.CurentStatus == Statuses.InProgress);
+            var data = context.WorkRequestUserJunctions
+                 .Include(wru => wru.User)
+                 .Include(wru => wru.WorkRequest)
+                 .Where(wrj => wrj.UserId == user.Id)
+                 .Select(wrj => wrj.WorkRequest);
 
+            if (status != null){
+                data = data.Where(wr => wr.CurentStatus == status);
+            }
+    
             var model = new UserWorkRequestViewModel
             {
                 User = user,
-                WorkRequests = new PagedList<WorkRequest>(workRequests.Select(wrj => wrj.WorkRequest), options)
+                WorkRequests = new PagedList<WorkRequest>(data, options)
             };
             return View(model);
         }
@@ -88,7 +92,7 @@ namespace WorkRequestManagment.Controllers
                 }
 
                 context.SaveChanges();
-                return RedirectToAction(nameof(List));
+                return RedirectToAction(nameof(Index));
             }
 
             return View(updateWorkRequest);
@@ -110,7 +114,7 @@ namespace WorkRequestManagment.Controllers
             context.WorkRequests.Remove(requestForDelete);
             context.SaveChanges();
 
-            return RedirectToAction(nameof(List));
+            return RedirectToAction(nameof(Index));
         }
 
    

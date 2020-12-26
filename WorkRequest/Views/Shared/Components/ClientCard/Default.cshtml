@@ -1,5 +1,5 @@
 ﻿
-@model ExecutorCardViewModel
+@model ClientCardViewModel
 
 <div class="media text-white m-3 p-3  bg-linear-blue rounded shadow-sm">
     <div style="height: 100px; width: 100px" >
@@ -16,17 +16,17 @@
         <h5 class="text-center">Список Заявок</h5>
         <div class="row pt-3 ">
             <div class="col text-center">
-                <a asp-action="Index" asp-controller="ExecutorRequests" >
+                <a asp-action="Index" >
                     <h6 class="btn btn-outline-light mr-2 "> All </h6>
                 </a>
 
-                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.Created">
+                <a asp-action="Index" asp-route-status="@Statuses.Created">
                     <h6 class="btn btn-outline-light mr-2 ">Created <span class="badge badge-light">@Model.CreatedRequestCount</span> </h6>
                 </a>
-                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.InProgress">
+                <a asp-action="Index"  asp-route-status="@Statuses.InProgress">
                     <h6 class="btn btn-outline-light mr-2 ">In Progress <span class="badge badge-light">@Model.InProgressRequesCount</span> </h6>
                 </a>
-                <a asp-action="Index" asp-controller="ExecutorRequests" asp-route-status="@Statuses.Done">
+                <a asp-action="Index"  asp-route-status="@Statuses.Done">
                     <h6 class="btn btn-outline-light mr-2 "> Done </h6>
                 </a>
             </div>

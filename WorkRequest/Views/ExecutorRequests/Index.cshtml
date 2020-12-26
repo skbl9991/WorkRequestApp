@@ -2,18 +2,15 @@
 @model UserWorkRequestViewModel
 
 @{
-    ViewBag.Title = "Список заявок";
+    ViewBag.Title = "Список заявок для Исполнителя";
 }
 
 <div class="m-1 p-2">
     @* User Card Section *@
-    <vc:executor-card user-model="@Model.User">
-
-    </vc:executor-card>
+    <vc:executor-card user-model="@Model.User"/>
 
     @* Pages Section *@
-    @if (Model.WorkRequests.TotalPages > 0)
-    {
+    @if (Model.WorkRequests.TotalPages > 0) {
         <div class="text-center">
             <partial name="_Pages" model="Model.WorkRequests" />
         </div>
@@ -21,19 +18,16 @@
 
     @* WorkRequest Section *@
     <div class="m-3 p-3 bg-white rounded shadow-sm">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Текущие Заявки</h6>
-        @if (Model.WorkRequests.Count() == 0)
-        {
+        <h6 class="border-bottom border-gray pb-2 mb-0">Текущие Заявки (Статус: @(ViewBag.SelectedStatus ?? "Не указан" ))</h6>
+        @if (Model.WorkRequests.Count() == 0) {
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <div class=" text-center mt-3 p-3">
                     <h6> Сейчас у вас нет заявок для выполнения</h6>
                 </div>
             </div>
         }
-        else
-        {
-            @foreach (WorkRequest wrItem in Model.WorkRequests)
-            {
+        else {
+            @foreach (WorkRequest wrItem in Model.WorkRequests) {
                 <partial name="_WorkRequestExecutor" model="wrItem" />
             }
         }
