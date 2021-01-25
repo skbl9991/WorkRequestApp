@@ -1,0 +1,76 @@
+﻿
+@model UserListViewModel;
+
+@{
+    ViewBag.Title = "Администрирование пользователей";
+    ViewBag.FromId = "form-options"; //обьединение данных для одной формы (Paged, UserCard)
+}
+
+@* UserAdmin Page *@
+
+<div class="m-1 p-2">
+
+    @* UserCard *@
+    <vc:admin-card user-model="@Model.AdminUser" />
+
+    @* Pages Section *@
+    @if (Model.Users.TotalPages > 0)
+    {
+        <div class="text-center">
+            <partial name="_Pages" model="Model.Users" />
+        </div>
+    }
+
+
+    @* User List Block *@
+    <h6 class="border-bottom border-gray pb-2 mb-0">Список Пользователей</h6>
+    @foreach (User u in Model.Users)
+    {
+
+        <div class="shadow p-3 mb-1 bg-white rounded">
+
+            <div class="row">
+                <div class="col-sm-1 text-info ">
+                    <i style="font-size: 45px" class="fas fa-user-circle p-3"></i>
+                </div>
+                <div class="col-sm-6 ">
+                    <input type="hidden" asp-for="@u.Id" />
+                    <div class="form-inline">
+                        <label class="form-group">UserFIO: @u.UserFIO </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-inline">
+                                <label class="form-group">Logon: @u.LogonName</label>
+                            </div>
+                            <div class="form-inline">
+                                <label class="form-group">Phone: @u.Phone</label>
+                            </div>
+                        </div>
+                        <div class="ml-3 col-5">
+                            <div class="form-inline">
+                                <label class="form-group">Roles: <span class="text-info"> @u.Role.ToString()</span> </label>
+                            </div>
+                            <div class="form-inline">
+                                <label class="form-group">Groups: {GroupName}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="text-right">
+                        <button class="btn btn-sm btn-outline-info">Подробнее</button>
+                        <button class="btn btn-sm btn-outline-primary">Изменить</button>
+                        <button class="btn btn-sm btn-outline-danger">Удалить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+
+</div>

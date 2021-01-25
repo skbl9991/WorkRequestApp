@@ -8,10 +8,6 @@ using WorkRequestManagment.Models.EFJunctions;
 
 namespace WorkRequestManagment.Models
 {
-    public enum Roles
-    {
-        Client, Executor, RoleAdmin, Inspector, MainAdmin
-    }
 
     public class User
     {

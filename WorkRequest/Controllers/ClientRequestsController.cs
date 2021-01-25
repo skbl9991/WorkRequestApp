@@ -40,6 +40,7 @@ namespace WorkRequestManagment.Controllers
                  .Where(wrj => wrj.UserId == user.Id)
                  .Select(wrj => wrj.WorkRequest);
 
+            //Filter options
             if (status != null){
                 data = data.Where(wr => wr.CurentStatus == status);
             }

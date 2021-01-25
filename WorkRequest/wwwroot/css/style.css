@@ -26,4 +26,8 @@
     background-image: linear-gradient(135deg, #809cec 0%, #242b83 100%);
 }
 
+.bg-liner-white-blue {
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+}
 

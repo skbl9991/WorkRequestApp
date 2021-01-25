@@ -1,0 +1,83 @@
+﻿
+@model AdminCardViewModel
+@* AdminCard *@
+
+<form id="@(ViewBag.FromId ?? "pageform")" method="post" asp-action="Index">
+
+    <div class="media text-white m-3 p-3  bg-linear-blue rounded shadow-sm">
+        <div style="height: 100px; width: 100px">
+            <i style="font-size: 70px" class="fas fa-user-circle p-3"></i>
+        </div>
+
+        <div class="p-2 mr-5 mb-0 small">
+            <h5 class="d-block pt-2 ">FIO: @Model.User.UserFIO</h5>
+            <strong class="d-block ">Role: @Model.User.Role.ToString()</strong>
+            <strong class="d-block ">Phone: @Model.User.Phone</strong>
+
+            <div class=" pt-4 d-block">
+                <button class="btn btn-sm btn-outline-light" data-toggle="collapse" href="#filterCard"
+                        type="button">
+                    Show Filters
+                </button>
+            </div>
+        </div>
+
+        <div class="col h-100  border-left border-white">
+            @*<h5 class="text-center mr-0 p-0">Панель управления</h5>*@
+            <div class="row ">
+                <div class="col h-100 pt-3 border-left border-white">
+                    <h5 class="text-center">Список Пользоватей</h5>
+                    <div class="row pt-3 ">
+                        <div class="col text-center">
+                            <a asp-action="Index">
+                                <h6 class="btn btn-outline-light mr-2 "> All </h6>
+                            </a>
+
+                            @foreach (string roleName in Enum.GetNames(typeof(Roles)))
+                            {
+                                <a asp-action="Index" asp-route-role="@(Enum.Parse(typeof(Roles), roleName, true))">
+                                    <h6 class="btn btn-outline-light mr-2 ">
+                                        @roleName
+                                        <span class="badge badge-light">@Model.GetCountByRoleName(roleName)</span>
+                                    </h6>
+                                </a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Filter Part *@
+    <div class="collapse2" id="filterCard">
+        <div class=" m-3 p-3 rounded shadow-sm ">
+            <div class="form-group  ">
+                <label>FIO: </label>
+                <input name="filterOptions.FIO" value="" class="form-control form-control-sm" type="text" placeholder="Enter some FIO..." />
+                @*<input name="filterOptions.FIO" value="" class="form-control form-control-sm" type="text" placeholder="Enter some FIO..." />*@
+            </div>
+            <div class="form-group">
+                <label>Logon Name: </label>
+                <input name="filterOptions.Logon" class="form-control form-control-sm" type="text" placeholder="Enter some Logon..." />
+            </div>
+            <div class="form-group">
+                <label>Phone: </label>
+                <input name="filterOptions.Phone"
+                       class="form-control form-control-sm" type="text"  placeholder="Enter some Phone..." />
+            </div>
+            <div class="form-group">
+                <label>Roles: </label>
+                <input  name="filterOptions.Roles"
+                       class="form-control form-control-sm" type="text"
+                       placeholder="Enter some Roles... (RoleName1, RoleName2, RoleName3)" />
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary"> Apply Filter </button>
+                <a class="btn btn-secondary" asp-action="Index" > Reset Filter </a>
+            </div>
+        </div>
+    </div>
+
+</form>
