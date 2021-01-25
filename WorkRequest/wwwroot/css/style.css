@@ -1,0 +1,29 @@
+﻿
+/*Classess for WorkRequest Svg tag*/
+
+.fill-danger {
+    fill: #dc3545 !important;
+}
+
+.fill-warning {
+    fill: #ffc107 !important;
+}
+
+.fill-info {
+    fill: #17a2b8 !important;
+}
+
+.fill-success {
+    fill: #28a745 !important;
+}
+
+.fill-secondary {
+    fill: #6c757d !important;
+}
+
+.bg-linear-blue {
+    background-color: #809cec;
+    background-image: linear-gradient(135deg, #809cec 0%, #242b83 100%);
+}
+
+

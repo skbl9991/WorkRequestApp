@@ -1,0 +1,75 @@
+﻿
+@model WorkRequest
+
+
+<div class="media text-muted pt-3">
+    <svg class="bd-placeholder-img mr-2 rounded" width="8" height="64"
+         preserveAspectRatio="xMidYMid slice" role="img" focusable="false">
+        <title>@(nameof(Model.CurentStatus))</title>
+        <rect width="100%" height="100%" status-code="@Model.CurentStatus" fill-or-color="fill"></rect>
+        <text x="50%" y="50%" status-code="@Model.CurentStatus" fill-or-color="fill" dy=".3em">32x32</text>
+    </svg>
+
+    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <strong class="text-gray-dark">@((Statuses)Model.CurentStatus)</strong>
+            <div class="row mr-3">
+                @*<a asp-action="AddOrUpdate" asp-route-editWorkRequestId="@Model.Id"
+                    class="btn btn-sm btn-outline-warning @(Model.CurentStatus != Statuses.Created ? "disabled" : "")"> Edit </a>*@
+                <div class="mr-1">
+                    <form id="@($"accept-form-{Model.Id}")" asp-action="AcceptRequest" method="post">
+                        <input type="hidden" name="acceptedRequestId" value="@Model.Id" />
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                        <partial name="_ModalAcceptAction" model="@(new ModalViewSetings {
+                                ModalId = "acceptModal-"+ Model.Id,
+                                BodyText="Добавить заявку в свой список выполнения ?" ,
+                                ModelStyle = "primary",
+                                Title="Принять заявку" })" />
+
+                        <button type="button" class="btn btn-sm btn-outline-primary @(Model.CurentStatus == Statuses.Created ? "" : "d-none") "
+                                data-toggle="modal" data-target="@("#acceptModal-"+ Model.Id)">
+                            Accept
+                        </button>
+                    </form>
+                </div>
+
+                <div class="mr-1">
+                    <form id="done-form" asp-action="DoneWorkRequest" method="post">
+                        <input type="hidden" name="doneWorkRequestId" value="@Model.Id" />
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                        <partial name="_ModalAcceptAction" model="@(new ModalViewSetings {
+                                ModalId = "doneModal-" + Model.Id,
+                                BodyText = "Подтвердите выполнение заявки !",
+                                ModelStyle = "success",
+                                Title = "Завершить выполнение" })" />
+                        <button type="button" class="btn btn-sm btn-outline-success @(Model.CurentStatus == Statuses.InProgress ? "" : "d-none")"
+                                data-toggle="modal" data-target="@("#doneModal-" + Model.Id)">
+                            Done
+                        </button>
+                    </form>
+                </div>
+
+                <div class="">
+                    <form id="delete-form" asp-action="DeleteWorkRequest" method="post">
+                        <input type="hidden" name="deletedWorkRequestId" value="@Model.Id" />
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                        <partial name="_ModalAcceptAction" model="@(new ModalViewSetings {
+                                ModalId = "deleteModal-" + Model.Id,
+                                BodyText = "Удаление заявки",
+                                ModelStyle = "danger",
+                                Title = "Вы точно хотите удалить заявку ?" })" />
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                data-toggle="modal" data-target="@("#deleteModal-" + Model.Id)">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <span class="d-block">
+            <p class="media-body pb-3 mb-0 lh-125 "> @Model.RequestMessage</p>
+        </span>
+    </div>
+</div>

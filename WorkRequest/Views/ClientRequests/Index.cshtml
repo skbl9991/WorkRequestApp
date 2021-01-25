@@ -1,0 +1,46 @@
+﻿
+@model UserWorkRequestViewModel
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Клиентские Заявки";
+}
+
+<div class="m-1 p-2">
+
+    <vc:client-card user-model="@Model.User" />
+
+    @* Pages Section *@
+    @if (Model.WorkRequests.TotalPages > 0)
+    {
+        <div class="text-center">
+            <partial name="_Pages" model="Model.WorkRequests" />
+        </div>
+    }
+
+    @* WorkRequest Section *@
+    <div class="m-3 p-3 bg-white rounded shadow-sm">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Текущие Заявки</h6>
+        @if (Model.WorkRequests.Count() == 0)
+        {
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <div class=" text-center mt-3 p-3">
+                    <h6> Сейчас у вас нет заявок</h6>
+                    <span> Для создания новой заявки нажмите  <strong> Создать </strong> </span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (WorkRequest wrItem in Model.WorkRequests)
+            {
+                <partial name="_WorkRequestClient" model="wrItem" />
+            }
+
+            <small class="d-block text-right mt-3">
+                <a asp-action="AddOrUpdate" class="btn btn-sm btn-primary">Создать </a>
+            </small>
+        }
+    </div>
+
+</div>
